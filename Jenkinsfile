@@ -73,11 +73,11 @@ pipeline {
         
         stage('AppCreation'){
           steps{
-            dir('E:\\SiddhatechDevopsDemo\\android-app') {
-                bat label: '', script: 'gradlew clean'
-                bat label: '', script: 'gradlew assemble'
+             dir('E:\\SiddhatechDevopsDemo\\android-app') {
+                //bat label: '', script: 'gradlew clean'
+                //bat label: '', script: 'gradlew assemble'
                 
-                step([$class: 'SignApksBuilder', androidHome: 'D:\\Program Files (x86)\\Android\\android-sdk', apksToSign: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\*.apk', keyAlias: 'banco popular', keyStoreId: 'Jenkins_Android_Sign', skipZipalign: true])   
+                //step([$class: 'SignApksBuilder', androidHome: 'D:\\Program Files (x86)\\Android\\android-sdk', apksToSign: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\*.apk', keyAlias: 'banco popular', keyStoreId: 'Jenkins_Android_Sign', skipZipalign: true])   
                 //step([$class: 'SignApksBuilder', androidHome: 'D:\\Program Files (x86)\\Android\\android-sdk', apksToSign: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\*.apk', skipZipalign: true, keyAlias: 'banco popular', keyStoreId: 'Android-Key'])
                 }
             }
