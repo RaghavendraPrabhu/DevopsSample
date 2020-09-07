@@ -24057,7 +24057,7 @@ puede usarse para definir un plan de contingencia</xsd:documentation>
          <subSegmento>101-Masivo</subSegmento>
          <NS3:ListaCuentas>
             <NS3:Cuentas>
-               <tipo>Raghu11</tipo>
+               <tipo>Ahorros o Corriente</tipo>
                <subtipo>SAVINGS</subtipo>
                <numero>758201552</numero>
                <moneda>DOP</moneda>
@@ -24066,7 +24066,7 @@ puede usarse para definir un plan de contingencia</xsd:documentation>
                <ultimoCorte>18.82</ultimoCorte>
                <fechaUltimoCorte>04/10/2018</fechaUltimoCorte>
                <balanceTransitos>.00</balanceTransitos>
-               <alias>Raghavendra Test</alias>
+               <alias>Ahorros o Corriente</alias>
                <sePermiteTransaccion>1</sePermiteTransaccion>
                <esProductoAdicional>0</esProductoAdicional>
                <relacion>SOW</relacion>
