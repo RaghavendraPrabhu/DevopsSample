@@ -24085,7 +24085,7 @@ puede usarse para definir un plan de contingencia</xsd:documentation>
                <ultimoCorte>4004.85</ultimoCorte>
                <fechaUltimoCorte>04/10/2018</fechaUltimoCorte>
                <balanceTransitos>.00</balanceTransitos>
-               <alias>Jaya Uday Prabhu</alias>
+               <alias>Jaya Uday</alias>
                <sePermiteTransaccion>1</sePermiteTransaccion>
                <esProductoAdicional>0</esProductoAdicional>
                <relacion>SOW</relacion>
