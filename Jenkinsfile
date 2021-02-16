@@ -87,9 +87,9 @@ pipeline {
         stage('Send APK'){
             steps{
             dir('E:\\SiddhatechDevopsDemo\\android-app') {
-               emailext attachmentsPattern: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\*.apk', body: 'Jenkins Build Number - $BUILD_NUMBER', subject: 'Siddhatech Demo Jenkins Build APK - ${BUILD_TIMESTAMP}', to: 'raghavendrap@siddhatech.com' 
-               
-			   
+               emailext attachmentsPattern: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\SSC_BPDContainer-dev.apk', body: '''Hi Raghavendra,
+Attached Is  Android Build
+Jenkins Build Number - $BUILD_NUMBER''', subject: 'Siddhatech Demo Jenkins Build APK - ${BUILD_TIMESTAMP}', to: 'raghavendrap@siddhatech.com'
                 }
             }
         }
