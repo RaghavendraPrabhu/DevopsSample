@@ -21,7 +21,7 @@
         <init-param>
             <description>global settings file</description>
             <param-name>soapUISettings</param-name>
-            <param-value></param-value>
+            <param-value>WEB-INF/soapui/soapui-settings.xml</param-value>
         </init-param>
         <init-param>
             <description>set listeners directory</description>
@@ -41,7 +41,7 @@
         <init-param>
             <description>set MockService endpoint used in generated WSDLs and schemas</description>
             <param-name>mockServiceEndpoint</param-name>
-            <param-value>http://192.168.99.100:8080/ProductosServicios</param-value>
+            <param-value>http://45.79.42.37:8088/ProductosServicios</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
