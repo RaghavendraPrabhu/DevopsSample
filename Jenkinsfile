@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Pull-Dummy'){
           steps{
-            dir('E:\\SiddhatechDevopsJenkins\\dummyservices') {
+            dir('F:\\SiddhatechDevopsJenkins\\dummyservices') {
                 git credentialsId: '3b75e8ec-6391-4851-a8b9-ca54cd84a50d', url: 'https://github.com/RaghavendraPrabhu/DevopsSample.git'
                 }
             }
@@ -12,8 +12,8 @@ pipeline {
         
         stage('Package'){
           steps{
-            dir('E:\\SiddhatechDevopsJenkins\\dummyservices') {
-                bat label: '', script: '''cd E:\\SiddhatechDevopsJenkins\\dummyservices
+            dir('F:\\SiddhatechDevopsJenkins\\dummyservices') {
+                bat label: '', script: '''cd F:\\SiddhatechDevopsJenkins\\dummyservices
                 jar -cvf ProductosServicios.war *
                 '''
                 }
@@ -22,7 +22,7 @@ pipeline {
         
         stage('Pull-MAM'){
           steps{
-            dir('E:\\SiddhatechDevopsDemo\\MAM') {
+            dir('F:\\SiddhatechDevopsDemo\\MAM') {
                 git branch: 'dummyMAM', credentialsId: '3b75e8ec-6391-4851-a8b9-ca54cd84a50d', url: 'https://github.com/Siddhatech/MAM-BPD.git'
                 }
             }
@@ -30,7 +30,7 @@ pipeline {
         
         stage('PackageMAM'){
           steps{
-            dir('E:\\SiddhatechDevopsDemo\\MAM') {
+            dir('F:\\SiddhatechDevopsDemo\\MAM') {
                 bat label: '', script: '''activator compile'''
                 bat label: '', script: '''activator dist'''
                 }
@@ -39,19 +39,19 @@ pipeline {
         
         stage('Unzip-Jar'){
           steps{
-            fileOperations([fileUnZipOperation(filePath: 'E:\\SiddhatechDevopsDemo\\MAM\\target\\universal\\mambpd-1.0-SNAPSHOT.zip', targetLocation: 'E:\\SiddhatechDevopsDemo\\MAM\\target\\universal')])
+            fileOperations([fileUnZipOperation(filePath: 'F:\\SiddhatechDevopsDemo\\MAM\\target\\universal\\mambpd-1.0-SNAPSHOT.zip', targetLocation: 'F:\\SiddhatechDevopsDemo\\MAM\\target\\universal')])
             }
         }
         
         stage('Copy-Jar'){
           steps{
-            fileOperations([folderCopyOperation(destinationFolderPath: 'E:\\SiddhatechDevopsJenkins\\mam\\lib', sourceFolderPath: 'E:\\SiddhatechDevopsDemo\\MAM\\target\\universal\\mambpd-1.0-SNAPSHOT\\lib')])
+            fileOperations([folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsJenkins\\mam\\lib', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\MAM\\target\\universal\\mambpd-1.0-SNAPSHOT\\lib')])
             }
         }
         
         stage('Dockerise'){
             steps{
-            dir('E:\\SiddhatechDevopsJenkins') {
+            dir('F:\\SiddhatechDevopsJenkins') {
                 withEnv(['JENKINS_NODE_COOKIE=DontKillMe']) {
                 bat label: '', script: 'docker-compose down --rmi all'
                 bat label: '', script: 'docker-compose up -d'
@@ -63,17 +63,17 @@ pipeline {
         
         stage('Pull-AndroidAPP'){
           steps{
-            dir('E:\\SiddhatechDevopsDemo\\android-app') {
+            dir('F:\\SiddhatechDevopsDemo\\android-app') {
                 git branch: 'master', credentialsId: '3b75e8ec-6391-4851-a8b9-ca54cd84a50d', url: 'https://github.com/Siddhatech/Android_Demo.git'
                 
-                //fileOperations([folderCopyOperation(destinationFolderPath: 'E:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer', sourceFolderPath: 'E:\\SiddhatechDevopsDemo\\CopyFiles\\SSC_BPDContainer'), folderCopyOperation(destinationFolderPath: 'E:\\SiddhatechDevopsDemo\\android-app', sourceFolderPath: 'E:\\SiddhatechDevopsDemo\\CopyFiles\\android-app'), folderCopyOperation(destinationFolderPath: 'E:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer\\src\\main\\java\\com\\siddhatech\\activities\\common', sourceFolderPath: 'E:\\SiddhatechDevopsDemo\\CopyFiles\\common'), folderCopyOperation(destinationFolderPath: 'E:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer\\src\\main\\java\\com\\siddhatech\\activities\\registration', sourceFolderPath: 'E:\\SiddhatechDevopsDemo\\CopyFiles\\registration')])
+                //fileOperations([folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\SSC_BPDContainer'), folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\android-app'), folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer\\src\\main\\java\\com\\siddhatech\\activities\\common', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\common'), folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer\\src\\main\\java\\com\\siddhatech\\activities\\registration', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\registration')])
                 }
             }
         }
         
         stage('AppCreation'){
           steps{
-             dir('E:\\SiddhatechDevopsDemo\\android-app') {
+             dir('F:\\SiddhatechDevopsDemo\\android-app') {
                 bat label: '', script: 'gradlew clean'
                 bat label: '', script: 'gradlew assemble'
                 
@@ -86,7 +86,7 @@ pipeline {
         
         stage('Send APK'){
             steps{
-            dir('E:\\SiddhatechDevopsDemo\\android-app') {
+            dir('F:\\SiddhatechDevopsDemo\\android-app') {
                emailext attachmentsPattern: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\SSC_BPDContainer-dev.apk', body: '''Hi Raghavendra,
 Attached Is  Android Build
 Jenkins Build Number - $BUILD_NUMBER''', subject: 'Siddhatech Jenkins-Build APK - ${BUILD_TIMESTAMP}', to: 'raghavendrap@siddhatech.com'
