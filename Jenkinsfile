@@ -4,97 +4,122 @@ pipeline {
     stages {
         stage('Pull-Dummy'){
           steps{
-            dir('F:\\SiddhatechDevopsJenkins\\dummyservices') {
-                git credentialsId: '3b75e8ec-6391-4851-a8b9-ca54cd84a50d', url: 'https://github.com/RaghavendraPrabhu/DevopsSample.git'
-				
+			echo "Pulling The Dummy Code From Git Hub Repo Master......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsJenkins/dummyservices') {
+                git branch: 'master', credentialsId: 'a12fd8b6-809b-4688-ae7e-cb4f9727984b', url: 'https://github.com/RaghavendraPrabhu/DevopsSample.git'
                 }
             }
         }
         
-        stage('Package'){
+        
+        stage('Package War'){
+		
           steps{
-            dir('F:\\SiddhatechDevopsJenkins\\dummyservices') {
-                bat label: '', script: '''cd F:\\SiddhatechDevopsJenkins\\dummyservices
-                jar -cvf ProductosServicios.war *
-                '''
-                }
+			echo "Packaging The Code Into ProductosServicios War File......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsJenkins/dummyservices') {
+                echo "Packaging The Updated Code......"
+                sh 'jar -cvf ProductosServicios.war *'
+              }
             }
         }
+        
         
         stage('Pull-MAM'){
           steps{
-            dir('F:\\SiddhatechDevopsDemo\\MAM') {
-                git branch: 'dummyMAM', credentialsId: '3b75e8ec-6391-4851-a8b9-ca54cd84a50d', url: 'https://github.com/Siddhatech/MAM-BPD.git'
+		  	echo "Pulling The Updated MAM Code From Git Hub Repo dummyMAM......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsDemo/MAM') {
+                git branch: 'dummyMAM', credentialsId: 'a12fd8b6-809b-4688-ae7e-cb4f9727984b', url: 'https://github.com/Siddhatech/MAM-BPD.git'
                 }
             }
         }
         
         stage('PackageMAM'){
           steps{
-            dir('F:\\SiddhatechDevopsDemo\\MAM') {
-                bat label: '', script: '''activator compile'''
-                bat label: '', script: '''activator dist'''
+			echo "Packaging The MAM Code MAMBPD ZIP File......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsDemo/MAM') {
+		        sh '/usr/local/sbin/activator compile'
+                sh '/usr/local/sbin/activator dist'
                 }
             }
         }
         
-        stage('Unzip-Jar'){
+        stage('Unzip-Jar/Copy'){
           steps{
-            fileOperations([fileUnZipOperation(filePath: 'F:\\SiddhatechDevopsDemo\\MAM\\target\\universal\\mambpd-1.0-SNAPSHOT.zip', targetLocation: 'F:\\SiddhatechDevopsDemo\\MAM\\target\\universal')])
-            }
-        }
-        
-        stage('Copy-Jar'){
-          steps{
-            fileOperations([folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsJenkins\\mam\\lib', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\MAM\\target\\universal\\mambpd-1.0-SNAPSHOT\\lib')])
-            }
-        }
-        
-        stage('Dockerise'){
-            steps{
-            dir('F:\\SiddhatechDevopsJenkins') {
-                withEnv(['JENKINS_NODE_COOKIE=DontKillMe']) {
-                bat label: '', script: 'docker-compose down --rmi all'
-                bat label: '', script: 'docker-compose up -d'
-                }
+			echo "UNZIP MAMBPD File And Copy The MAM Jar To Docker MAM Folder......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsDemo/MAM/target/universal') {
+		    sh 'unzip -o mambpd-1.0-SNAPSHOT.zip'
+		    sh 'cp /var/lib/jenkins/workspace/SiddhatechDevopsDemo/build.gradle /var/lib/jenkins/workspace/SiddhatechDevopsDemo/android-app/SSC_BPDContainer'
+            sh 'chmod -R 777 /var/lib/jenkins/workspace/SiddhatechDevopsDemo'
+            sh 'chmod -R 777 /var/lib/jenkins/workspace/SiddhatechDevopsJenkins'
+			sh 'cp -r /var/lib/jenkins/workspace/SiddhatechDevopsDemo/MAM/target/universal/mambpd-1.0-SNAPSHOT/lib /var/lib/jenkins/workspace/SiddhatechDevopsJenkins/mam'
+            
                 
-                }
+            }
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsJenkins') {
+			sh 'docker-compose down --rmi all'  
+            }    
+                
             }
         }
         
         stage('Pull-AndroidAPP'){
           steps{
-            dir('F:\\SiddhatechDevopsDemo\\android-app') {
-                git branch: 'master', credentialsId: '3b75e8ec-6391-4851-a8b9-ca54cd84a50d', url: 'https://github.com/Siddhatech/Android_Demo.git'
-                
-                //fileOperations([folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\SSC_BPDContainer'), folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\android-app'), folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer\\src\\main\\java\\com\\siddhatech\\activities\\common', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\common'), folderCopyOperation(destinationFolderPath: 'F:\\SiddhatechDevopsDemo\\android-app\\SSC_BPDContainer\\src\\main\\java\\com\\siddhatech\\activities\\registration', sourceFolderPath: 'F:\\SiddhatechDevopsDemo\\CopyFiles\\registration')])
-                }
+			echo "Pulling The Updated ANDROID Code From Git Hub Repo master......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsDemo/android-app') {
+                //sh 'rm -r /var/lib/jenkins/workspace/SiddhatechDevopsDemo/android-app/SignApksBuilder-out'
+                git branch: 'master', credentialsId: 'a12fd8b6-809b-4688-ae7e-cb4f9727984b', url: 'https://github.com/Siddhatech/Android_Demo.git'
+              
+              }
             }
         }
         
-        stage('AppCreation'){
-          steps{
-             dir('F:\\SiddhatechDevopsDemo\\android-app') {
-                bat label: '', script: 'gradlew clean'
-                bat label: '', script: 'gradlew assemble'
-                
-                step([$class: 'SignApksBuilder', androidHome: 'D:\\Program Files (x86)\\Android\\android-sdk', apksToSign: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\*.apk', keyAlias: 'banco popular', keyStoreId: 'Jenkins_Android_Sign', skipZipalign: true])   
-                //step([$class: 'SignApksBuilder', androidHome: 'D:\\Program Files (x86)\\Android\\android-sdk', apksToSign: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\*.apk', skipZipalign: true, keyAlias: 'banco popular', keyStoreId: 'Android-Key'])
-                }
-            }
-        }
-        
-        
-        stage('Send APK'){
+        stage('App-Build'){
             steps{
-            dir('F:\\SiddhatechDevopsDemo\\android-app') {
-               emailext attachmentsPattern: 'SSC_BPDContainer\\build\\outputs\\apk\\dev\\SSC_BPDContainer-dev.apk', body: '''Hi Raghavendra,
-Attached Is  Android Build
-Jenkins Build Number - $BUILD_NUMBER''', subject: 'Siddhatech Jenkins-Build APK - ${BUILD_TIMESTAMP}', to: 'raghavendrap@siddhatech.com'
+                echo "Builing Android APK......"
+                dir('/var/lib/jenkins/workspace/SiddhatechDevopsDemo/android-app') {
+                                                sh """
+                export ANDROID_HOME=/var/lib/jenkins/android-sdk/android-sdk;
+                export ANDROID_NDK_HOME=/var/lib/jenkins/android-sdk/android-sdk/android-ndk-r21d;
+                export PATH=\$PATH:\$ANDROID_HOME/tools:\$ANDROID_HOME/platform-tools;
+                
+                bash ./gradlew clean build
+"""
+                //step([$class: 'SignApksBuilder', androidHome: '/var/lib/jenkins/android-sdk/android-sdk', apksToSign: '/var/lib/jenkins/workspace/EmpressaAPK/**/*.apk', keyAlias: 'banco popular', keyStoreId: 'Android_Key', skipZipalign: true]) 
+                //step([$class: 'SignApksBuilder', apksToSign: '/var/lib/jenkins/workspace/EmpressaAPK/**/*.apk', keyAlias: 'banco popular', keyStoreId: 'JenkinsKey'])
+                //step([$class: 'SignApksBuilder', apksToSign: '/var/lib/jenkins/workspace/EmpressaAPK/*.apk', keyAlias: 'banco popular', keyStoreId: 'Android-Key'])
+                //step([$class: 'SignApksBuilder', androidHome: '/var/lib/jenkins/android-sdk/android-sdk', archiveSignedApks: false, apksToSign: '/var/lib/jenkins/workspace/EmpressaAPK/*.apk', keyAlias: 'banco popular', keyStoreId: 'Android-Key',skipZipalign: true])
+                //step([$class: 'SignApksBuilder', apksToSign: '/var/lib/jenkins/workspace/APP-EMPRESSA-ANDROID/build/outputs/apk/**/*.apk', keyAlias: 'banco popular', keyStoreId: 'Android-Key'])
+                step([$class: 'SignApksBuilder', androidHome: '/var/lib/jenkins/android-sdk/android-sdk', apksToSign: 'SSC_BPDContainer/build/outputs/apk/dev/*.apk', keyAlias: 'banco popular', keyStoreId: 'Android-Key', signedApkMapping: unsignedApkNameDir(), skipZipalign: true])
+                
+                            }
+
+                //Sign APK    
+                //([$class: 'SignApksBuilder', androidHome: '/opt/android-sdk', archiveSignedApks: false,apksToSign: 'SSC_BPDContainer/build/outputs/apk/**/*.apk', keyAlias: 'banco popular', keyStoreId: 'bpd-android-key', skipZipalign: true])                
+            }
+        }
+		
+		
+		stage('Send-APK'){
+            steps{
+            echo "Sending Android APK To Concern Person......"   
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsDemo/android-app/SignApksBuilder-out') {
+emailext attachmentsPattern: 'SSC_BPDContainer-dev-unsigned.apk/*.apk', body: '''Hi Raghavendra,
+Attached Is  Android Build For Siddhatech Server Demo
+Jenkins Build Number - $BUILD_NUMBER''', subject: 'Siddhatech Demo Jenkins Build APK - ${BUILD_TIMESTAMP}', to: 'raghavendrap@siddhatech.com'
                 }
             }
         }
-
+		
+        stage('Dockerise'){
+          steps{
+		  	echo "Dockerise DummyService MAM & MAM-APPS......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsJenkins') {
+                sh 'docker-compose up -d'
+                }
+            }
+        }
+        
     }
 
 }
+
