@@ -24057,7 +24057,7 @@ puede usarse para definir un plan de contingencia</xsd:documentation>
          <subSegmento>101-Masivo</subSegmento>
          <NS3:ListaCuentas>
             <NS3:Cuentas>
-               <tipo>Ahorros o Corriente</tipo>
+               <tipo>Account-1</tipo>
                <subtipo>SAVINGS</subtipo>
                <numero>758201552</numero>
                <moneda>DOP</moneda>
@@ -24076,7 +24076,7 @@ puede usarse para definir un plan de contingencia</xsd:documentation>
                <desembolsoEnable>0</desembolsoEnable>
             </NS3:Cuentas>
             <NS3:Cuentas>
-               <tipo>Ahorros o Corriente</tipo>
+               <tipo>Account-2</tipo>
                <subtipo>SAVINGS</subtipo>
                <numero>758423164</numero>
                <moneda>DOP</moneda>
