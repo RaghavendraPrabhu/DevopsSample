@@ -61,7 +61,16 @@ pipeline {
                 
             }
         }
-        
+		
+		stage('Dockerise'){
+          steps{
+		  	echo "Dockerise DummyService MAM & MAM-APPS......"
+            dir('/var/lib/jenkins/workspace/SiddhatechDevopsJenkins') {
+                sh 'docker-compose up -d'
+                }
+            }
+        }
+        /*
         stage('Pull-AndroidAPP'){
           steps{
 			echo "Pulling The Updated ANDROID Code From Git Hub Repo master......"
@@ -108,16 +117,9 @@ Attached Is  Android Build For Siddhatech Server Demo
 Jenkins Build Number - $BUILD_NUMBER''', subject: 'Siddhatech Demo Jenkins Build APK - ${BUILD_TIMESTAMP}', to: 'raghavendrap@siddhatech.com'
                 }
             }
-        }
+        }*/
 		
-        stage('Dockerise'){
-          steps{
-		  	echo "Dockerise DummyService MAM & MAM-APPS......"
-            dir('/var/lib/jenkins/workspace/SiddhatechDevopsJenkins') {
-                sh 'docker-compose up -d'
-                }
-            }
-        }
+
         
     }
 
